@@ -1,6 +1,16 @@
 import re
-import long_respones as long
+import random
 
+R_EATING = "I don't like eating anything because I'm a bot obviously!"
+R_ADVICE = "If I were you, I would go to the internet and type exactly what you wrote there!"
+
+def unknown():
+    response = ["Could you please re-phrase that? ",
+                "...",
+                "Sounds about right.",
+                "What does that mean?"][
+        random.randrange(4)]
+    return response
 
 def message_probability(user_message, recognised_words, single_response=False, required_words=[]):
     message_certainty = 0
@@ -26,7 +36,6 @@ def message_probability(user_message, recognised_words, single_response=False, r
     else:
         return 0
 
-
 def check_all_messages(message):
     highest_prob_list = {}
 
@@ -43,22 +52,17 @@ def check_all_messages(message):
     response('Thank you!', ['i', 'love', 'code', 'palace'], required_words=['code', 'palace'])
 
     # Longer responses
-    response(long.R_ADVICE, ['give', 'advice'], required_words=['advice'])
-    response(long.R_EATING, ['what', 'you', 'eat'], required_words=['you', 'eat'])
+    response(R_ADVICE, ['give', 'advice'], required_words=['advice'])
+    response(R_EATING, ['what', 'you', 'eat'], required_words=['you', 'eat'])
 
     best_match = max(highest_prob_list, key=highest_prob_list.get)
-    # print(highest_prob_list)
-    # print(f'Best match = {best_match} | Score: {highest_prob_list[best_match]}')
-
-    return long.unknown() if highest_prob_list[best_match] < 1 else best_match
-
+    return unknown() if highest_prob_list[best_match] < 1 else best_match
 
 # Used to get the response
 def get_response(user_input):
     split_message = re.split(r'\s+|[,;?!.-]\s*', user_input.lower())
     response = check_all_messages(split_message)
     return response
-
 
 # Testing the response system
 while True:
